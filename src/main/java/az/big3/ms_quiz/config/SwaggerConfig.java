@@ -18,7 +18,7 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("az.iktlab.big3.controller"))
+                .apis(RequestHandlerSelectors.basePackage("az.big3.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo());

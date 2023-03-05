@@ -1,0 +1,22 @@
+
+BBBBBBBBBBBBBBBBB   IIIIIIIIII      GGGGGGGGGGGGG      333333333333333
+B::::::::::::::::B  I::::::::I   GGG::::::::::::G     3:::::::::::::::33
+B::::::BBBBBB:::::B I::::::::I GG:::::::::::::::G     3::::::33333::::::3
+BB:::::B     B:::::BII::::::IIG:::::GGGGGGGG::::G     3333333     3:::::3
+  B::::B     B:::::B  I::::I G:::::G       GGGGGG                 3:::::3
+  B::::B     B:::::B  I::::IG:::::G                               3:::::3
+  B::::BBBBBB:::::B   I::::IG:::::G                       33333333:::::3
+  B:::::::::::::BB    I::::IG:::::G    GGGGGGGGGG         3:::::::::::3
+  B::::BBBBBB:::::B   I::::IG:::::G    G::::::::G         33333333:::::3
+  B::::B     B:::::B  I::::IG:::::G    GGGGG::::G                 3:::::3
+  B::::B     B:::::B  I::::IG:::::G        G::::G                 3:::::3
+  B::::B     B:::::B  I::::I G:::::G       G::::G                 3:::::3
+BB:::::BBBBBB::::::BII::::::IIG:::::GGGGGGGG::::G     3333333     3:::::3
+B:::::::::::::::::B I::::::::I GG:::::::::::::::G     3::::::33333::::::3
+B::::::::::::::::B  I::::::::I   GGG::::::GGG:::G     3:::::::::::::::33
+BBBBBBBBBBBBBBBBB   IIIIIIIIII      GGGGGG   GGGG      333333333333333
+
+
+MS - QUIZ Made By Big 3 group (Jafestro,Rashid,Matador)
+
+
