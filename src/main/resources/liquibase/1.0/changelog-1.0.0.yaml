@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: Create Quiz table for managing quiz answers
+      author: Jafar Jafarov
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: questions
+      changes:
+        - createTable:
+            tableName: questions
+            columns:
+              - column:
+                  name: id
+                  type: varchar
+                  autoIncrement: false
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: correct_answer_index
+                  type: int(4)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValue: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValue: now()
+                  constraints:
+                    nullable: false
+            remarks: Table for store question table

@@ -1,0 +1,16 @@
+  public Quiz createQuiz(int numQuestions) {
+        TriviaResponse response = triviaClient.getTriviaQuestions(numQuestions);
+
+        List<QuizQuestion> questions = new ArrayList<>();
+        for (TriviaQuestion question : response.getResults()) {
+            List<String> answers = new ArrayList<>();
+            answers.addAll(question.getIncorrectAnswers());
+            answers.add(question.getCorrectAnswer());
+            Collections.shuffle(answers);
+
+            questions.add(new QuizQuestion(question.getQuestion(), answers, answers.indexOf(question.getCorrectAnswer())));
+        }
+
+        return new Quiz(questions);
+    }
+}

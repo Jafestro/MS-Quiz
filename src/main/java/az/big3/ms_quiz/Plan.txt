@@ -1,0 +1,199 @@
+public class QuizQuestion {
+    private String questionText;
+    private List<String> answers;
+    private int correctAnswerIndex;
+
+    // constructor, getters, and setters
+}
+
+public class Quiz {
+    private List<QuizQuestion> questions;
+    private int score;
+    private int currentQuestionIndex;
+
+    // constructor, getters, and setters
+}
+
+
+@RestController
+public class QuizController {
+    private static final String TRIVIA_API_URL = "https://example.com/api/questions";
+    private static final String API_KEY = "your-api-key-here";
+
+    private RestTemplate restTemplate = new RestTemplate();
+
+    @GetMapping("/quiz")
+    public Quiz startQuiz() {
+        // retrieve questions from API
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Api-Key", API_KEY);
+        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+        ResponseEntity<String> response = restTemplate.exchange(TRIVIA_API_URL, HttpMethod.GET, entity, String.class);
+        String jsonResponse = response.getBody();
+
+        // parse questions into QuizQuestion objects
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<QuizQuestion> questions = objectMapper.readValue(jsonResponse, new TypeReference<List<QuizQuestion>>(){});
+
+        // create new Quiz object and return first question
+        Quiz quiz = new Quiz(questions, 0, 0);
+        return quiz;
+    }
+
+    @PostMapping("/quiz/answer")
+    public ResponseEntity<String> submitAnswer(@RequestBody AnswerRequest request) {
+        Quiz quiz = // retrieve Quiz object from database or session
+
+        // check if answer is correct
+        QuizQuestion currentQuestion = quiz.getQuestions().get(quiz.getCurrentQuestionIndex());
+        boolean isCorrect = currentQuestion.getCorrectAnswerIndex() == request.getAnswerIndex();
+        if (isCorrect) {
+            quiz.setScore(quiz.getScore() + 1);
+        }
+
+        // increment current question index and return next question or final score
+        quiz.setCurrentQuestionIndex(quiz.getCurrentQuestionIndex() + 1);
+        if (quiz.getCurrentQuestionIndex() >= quiz.getQuestions().size()) {
+            return ResponseEntity.ok("Your final score is: " + quiz.getScore());
+        } else {
+            QuizQuestion nextQuestion = quiz.getQuestions().get(quiz.getCurrentQuestionIndex());
+            return ResponseEntity.ok(nextQuestion);
+        }
+    }
+}
+
+public class AnswerRequest {
+    private int answerIndex;
+
+    public AnswerRequest() {}
+
+    public AnswerRequest(int answerIndex) {
+        this.answerIndex = answerIndex;
+    }
+
+    public int getAnswerIndex() {
+        return answerIndex;
+    }
+
+    public void setAnswerIndex(int answerIndex) {
+        this.answerIndex = answerIndex;
+    }
+}
+
+
+@PostMapping("/quiz/answer")
+public ResponseEntity<String> submitAnswer(@RequestBody AnswerRequest request) {
+    Quiz quiz = // retrieve Quiz object from database or session
+
+    // check if answer is correct
+    QuizQuestion currentQuestion = quiz.getQuestions().get(quiz.getCurrentQuestionIndex());
+    boolean isCorrect = currentQuestion.getCorrectAnswerIndex() == request.getAnswerIndex();
+    if (isCorrect) {
+        quiz.setScore(quiz.getScore() + 1);
+    }
+
+    // increment current question index and return next question or final score
+    quiz.setCurrentQuestionIndex(quiz.getCurrentQuestionIndex() + 1);
+    if (quiz.getCurrentQuestionIndex() >= quiz.getQuestions().size()) {
+        return ResponseEntity.ok("Your final score is: " + quiz.getScore());
+    } else {
+        QuizQuestion nextQuestion = quiz.getQuestions().get(quiz.getCurrentQuestionIndex());
+        String message = isCorrect ? "Correct!" : "Incorrect. The correct answer was: " + currentQuestion.getAnswers().get(currentQuestion.getCorrectAnswerIndex());
+        return ResponseEntity.ok(message + "\n\n" + nextQuestion.getQuestionText() + "\n" + String.join("\n", nextQuestion.getAnswers()));
+    }
+}
+
+
+
+
+// Using Feign client
+
+
+@FeignClient(name = "triviaClient", url = "https://opentdb.com")
+public interface TriviaClient {
+
+    @GetMapping("/api.php?amount={amount}")
+    TriviaResponse getTriviaQuestions(@PathVariable int amount);
+}
+
+
+
+@Service
+public class QuizService {
+
+    private TriviaClient triviaClient;
+
+    @Autowired
+    public QuizService(TriviaClient triviaClient) {
+        this.triviaClient = triviaClient;
+    }
+
+    public Quiz createQuiz(int numQuestions) {
+        TriviaResponse response = triviaClient.getTriviaQuestions(numQuestions);
+
+        List<QuizQuestion> questions = new ArrayList<>();
+        for (TriviaQuestion question : response.getResults()) {
+            List<String> answers = new ArrayList<>();
+            answers.addAll(question.getIncorrectAnswers());
+            answers.add(question.getCorrectAnswer());
+            Collections.shuffle(answers);
+
+            questions.add(new QuizQuestion(question.getQuestion(), answers, answers.indexOf(question.getCorrectAnswer())));
+        }
+
+        return new Quiz(questions);
+    }
+}
+public class Quiz {
+    private List<QuizQuestion> questions;
+
+    public Quiz(List<QuizQuestion> questions) {
+        this.questions = questions;
+    }
+
+    public List<QuizQuestion> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<QuizQuestion> questions) {
+        this.questions = questions;
+    }
+}
+
+
+public class QuizQuestion {
+    private String question;
+    private List<String> answers;
+    private int correctAnswerIndex;
+
+    public QuizQuestion(String question, List<String> answers, int correctAnswerIndex) {
+        this.question = question;
+        this.answers = answers;
+        this.correctAnswerIndex = correctAnswerIndex;
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(String question) {
+        this.question = question;
+    }
+
+    public List<String> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(List<String> answers) {
+        this.answers = answers;
+    }
+
+    public int getCorrectAnswerIndex() {
+        return correctAnswerIndex;
+    }
+
+    public void setCorrectAnswerIndex(int correctAnswerIndex) {
+        this.correctAnswerIndex = correctAnswerIndex;
+    }
+}
+
